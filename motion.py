@@ -210,17 +210,17 @@ plt.plot(Y[1:, 0], Y[1:, 6] * 180 / np.pi, label='alpha')  # Irányítási szög
 plt.xlabel("Idő [s]")  # Időtartam másodpercben
 plt.ylabel("Szög [fok]")  # Szögek fokban
 plt.legend()
-plt.title("Napvitorlás szögének változása időben")
+plt.title("Napvitorlás szögének változása időben") # Illustration of ViSoS rotation
 plt.grid()
 
 # Napvitorlás és a Föld pályájának 2D ábrázolása
 plt.figure()
-plt.plot(Y[1:, 1], Y[1:, 2], label='Napvitorlás')  # Napvitorlás pályája (x, y) [m]
-plt.plot(Y[1:, 7], Y[1:, 8], label='Föld')  # Föld pályája (x, y) [m]
+plt.plot(Y[1:, 1], Y[1:, 2], label='Napvitorlás')  # Solar sail orbit (x, y) [m]
+plt.plot(Y[1:, 7], Y[1:, 8], label='Föld')  # Earth orbit (x, y) [m]
 plt.xlabel("X pozíció [m]")  # X-koordináta méterben
 plt.ylabel("Y pozíció [m]")  # Y-koordináta méterben
 plt.legend()
-plt.title("Napvitorlás és a Föld pályája")
+plt.title("Napvitorlás és a Föld pályája") # Orbits of the solar sail and the Earth
 plt.axis('equal')  # Egyenlő tengelyarány a pontos ábrázolásért
 plt.grid()
 
@@ -228,10 +228,10 @@ plt.grid()
 distance = np.sqrt((Y[1:, 1] - Y[1:, 7])**2 + (Y[1:, 2] - Y[1:, 8])**2)  # Távolság kiszámítása [m]
 plt.figure()
 plt.plot(Y[1:, 0], distance, label='Távolság a Földtől')  # Távolság változása az idő függvényében
-plt.xlabel("Idő [s]")  # Időtartam másodpercben
-plt.ylabel("Távolság [m]")  # Távolság méterben
+plt.xlabel("Idő [s]")  # Time in sec / Időtartam másodpercben
+plt.ylabel("Távolság [m]")  # Distance in meter / Távolság méterben
 plt.legend()
-plt.title("Napvitorlás távolsága a Földtől időben")
+plt.title("Napvitorlás távolsága a Földtől időben") # Distance between the ViSoS and the Earth
 plt.grid()
 
 # Napvitorlás és Föld 3D pályája időben
@@ -243,7 +243,7 @@ ax.set_xlabel('X pozíció [m]')  # X-koordináta méterben
 ax.set_ylabel('Y pozíció [m]')  # Y-koordináta méterben
 ax.set_zlabel('Idő [s]')  # Idő másodpercben
 ax.legend()
-ax.set_title("Napvitorlás és a Föld 3D pályája")
+ax.set_title("Napvitorlás és a Föld 3D pályája") #Orbits in 3D
 #plt.show()
 
 #Szögváltozás időben: Ez az ábra a napvitorlás pálya menti szögét (Th) és az irányítási szöget (alpha) mutatja fokban. Segít megérteni, hogyan módosul a napvitorlás iránya a szimuláció során.
