@@ -4,7 +4,22 @@ The scientific background of the ViSoS simulator can be found in the attached pf
 git clone https://github.com/sztaki-hu/REFORMula.git
 cd REFORMula
 python -m venv .venv
+```
+### Activate Python virtual environment
+Windows CommandLine
+```
 .venv\Scripts\activate.bat
+```
+Windows PowerShell
+```
+.venv\Scripts\Activate.ps1
+```
+Linux and Mac
+```
+source ./.venv/bin/activate
+```
+### Upgrade pip and install required packages
+```
 py -m pip install --upgrade pip
 pip install -r requirements.txt
 ```
