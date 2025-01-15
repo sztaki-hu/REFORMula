@@ -203,106 +203,111 @@ for t in range(day0 * 24 * 3600 + tstep, (day0 + day) * 24 * 3600 + tstep, tstep
     Y_bovul = np.concatenate([[t], r_, v_, [Th_], [alpha_], r_earth])
     Y = np.vstack([Y, Y_bovul])
 
-print("Send data to the server...")
-token = 'PLACE_YOUR_TOKEN'
-response = requests.post(
-    'https://mernokmisszio.hu/solarsail/pyi.php',
-    json={'data': json.dumps(Y.tolist())}, 
-    headers={'Authorization': 'Bearer ' + token,
-    'User-Agent': 'PostmanRuntime/7.43.0',
-    'Accept-Encoding': 'gzip, deflate',
-    'Accept': '*/*',
-    'Connection': 'keep-alive',})
-print("Server response: ")
-print(response.text)
-
-# Eredmények megjelenítése grafikonokon
-
-# Szögváltozás (Th és alpha) időben
-plt.figure()
-plt.plot(Y[1:, 0], Y[1:, 5] * 180 / np.pi, label='Th')  # Napvitorlás pálya menti szöge [fok]
-plt.plot(Y[1:, 0], Y[1:, 6] * 180 / np.pi, label='alpha')  # Irányítási szög [fok]
-plt.xlabel("Idő [s]")  # Időtartam másodpercben
-plt.ylabel("Szög [fok]")  # Szögek fokban
-plt.legend()
-plt.title("Napvitorlás szögének változása időben") # Illustration of ViSoS rotation
-plt.grid()
-
-# Napvitorlás és a Föld pályájának 2D ábrázolása
-plt.figure()
-plt.plot(Y[1:, 1], Y[1:, 2], label='Napvitorlás')  # Solar sail orbit (x, y) [m]
-plt.plot(Y[1:, 7], Y[1:, 8], label='Föld')  # Earth orbit (x, y) [m]
-plt.xlabel("X pozíció [m]")  # X-koordináta méterben
-plt.ylabel("Y pozíció [m]")  # Y-koordináta méterben
-plt.legend()
-plt.title("Napvitorlás és a Föld pályája") # Orbits of the solar sail and the Earth
-plt.axis('equal')  # Egyenlő tengelyarány a pontos ábrázolásért
-plt.grid()
-
-# Napvitorlás távolsága a Földtől időben
-distance = np.sqrt((Y[1:, 1] - Y[1:, 7])**2 + (Y[1:, 2] - Y[1:, 8])**2)  # Távolság kiszámítása [m]
-plt.figure()
-plt.plot(Y[1:, 0], distance, label='Távolság a Földtől')  # Távolság változása az idő függvényében
-plt.xlabel("Idő [s]")  # Time in sec / Időtartam másodpercben
-plt.ylabel("Távolság [m]")  # Distance in meter / Távolság méterben
-plt.legend()
-plt.title("Napvitorlás távolsága a Földtől időben") # Distance between the ViSoS and the Earth
-plt.grid()
-
-# Napvitorlás és Föld 3D pályája időben
-fig = plt.figure()
-ax = fig.add_subplot(111, projection='3d')
-ax.plot3D(Y[1:, 1], Y[1:, 2], Y[1:, 0], label='Napvitorlás')  # Napvitorlás pályája (x, y, idő) [m, s]
-ax.plot3D(Y[1:, 7], Y[1:, 8], Y[1:, 0], label='Föld')  # Föld pályája (x, y, idő) [m, s]
-ax.set_xlabel('X pozíció [m]')  # X-koordináta méterben
-ax.set_ylabel('Y pozíció [m]')  # Y-koordináta méterben
-ax.set_zlabel('Idő [s]')  # Idő másodpercben
-ax.legend()
-ax.set_title("Napvitorlás és a Föld 3D pályája") #Orbits in 3D
-#plt.show()
-
-#Szögváltozás időben: Ez az ábra a napvitorlás pálya menti szögét (Th) és az irányítási szöget (alpha) mutatja fokban. Segít megérteni, hogyan módosul a napvitorlás iránya a szimuláció során.
-#2D pályák: A napvitorlás és a Föld pályáját vetíti ki a 2D síkra. Ez egy vizuális áttekintést ad arról, hogy a napvitorlás hogyan mozog a Földhöz képest.
-#Távolság a Földtől időben: Ez az ábra a napvitorlás és a Föld közötti távolságot ábrázolja az idő függvényében. A versenyzők célja, hogy a távolságot minimalizálják a szimuláció végére.
-#3D pályák időben: Ez az ábra három dimenzióban mutatja be a napvitorlás és a Föld pályáját, időtengellyel kiegészítve. Különösen hasznos a mozgás dinamikájának megértésére.
+print("Simualtion finished.")
+user_input = input("Would you like to see the result in the ViSoS simulator? (yes/no): ")
+if user_input.lower() == "yes" or user_input.lower() == "y":
+    print("Send data to the server...")
+    token = 'PLACE_YOUR_TOKEN'
+    response = requests.post(
+        'https://mernokmisszio.hu/solarsail/pyi.php',
+        json={'data': json.dumps(Y.tolist())}, 
+        headers={'Authorization': 'Bearer ' + token,
+        'User-Agent': 'PostmanRuntime/7.43.0',
+        'Accept-Encoding': 'gzip, deflate',
+        'Accept': '*/*',
+        'Connection': 'keep-alive',})
+    print("Server response: ")
+    print(response.text)
 
 
-# 2D animáció a napvitorlás és a Föld pályájáról
+user_input = input("Would you like to display the graphs? (yes/no): ")
+if user_input.lower() == "yes" or user_input.lower() == "y":
+    # Eredmények megjelenítése grafikonokon
 
-fig, ax = plt.subplots()
-ax.set_title("Napvitorlás és Föld pályája (2D animáció)")
-ax.set_xlabel("X pozíció [m]")
-ax.set_ylabel("Y pozíció [m]")
-ax.axis('equal')
-ax.grid()
+    # Szögváltozás (Th és alpha) időben
+    plt.figure()
+    plt.plot(Y[1:, 0], Y[1:, 5] * 180 / np.pi, label='Th')  # Napvitorlás pálya menti szöge [fok]
+    plt.plot(Y[1:, 0], Y[1:, 6] * 180 / np.pi, label='alpha')  # Irányítási szög [fok]
+    plt.xlabel("Idő [s]")  # Időtartam másodpercben
+    plt.ylabel("Szög [fok]")  # Szögek fokban
+    plt.legend()
+    plt.title("Napvitorlás szögének változása időben") # Illustration of ViSoS rotation
+    plt.grid()
 
-# Teljes pályák kirajzolása háttérként
-ax.plot(Y[:, 7], Y[:, 8], 'g--', label='Föld pályája')  # Föld teljes pályája (zöld szaggatott)
-line, = ax.plot([], [], 'b-', label='Napvitorlás pályája')  # Napvitorlás pályája (kék vonal)
-point, = ax.plot([], [], 'ro', label='Napvitorlás aktuális pozíciója')  # Napvitorlás aktuális pozíciója (piros pont)
+    # Napvitorlás és a Föld pályájának 2D ábrázolása
+    plt.figure()
+    plt.plot(Y[1:, 1], Y[1:, 2], label='Napvitorlás')  # Solar sail orbit (x, y) [m]
+    plt.plot(Y[1:, 7], Y[1:, 8], label='Föld')  # Earth orbit (x, y) [m]
+    plt.xlabel("X pozíció [m]")  # X-koordináta méterben
+    plt.ylabel("Y pozíció [m]")  # Y-koordináta méterben
+    plt.legend()
+    plt.title("Napvitorlás és a Föld pályája") # Orbits of the solar sail and the Earth
+    plt.axis('equal')  # Egyenlő tengelyarány a pontos ábrázolásért
+    plt.grid()
 
-earth_point, = ax.plot([], [], 'go', label='Föld aktuális pozíciója')  # Föld aktuális pozíciója (zöld pont)
-ax.legend()
+    # Napvitorlás távolsága a Földtől időben
+    distance = np.sqrt((Y[1:, 1] - Y[1:, 7])**2 + (Y[1:, 2] - Y[1:, 8])**2)  # Távolság kiszámítása [m]
+    plt.figure()
+    plt.plot(Y[1:, 0], distance, label='Távolság a Földtől')  # Távolság változása az idő függvényében
+    plt.xlabel("Idő [s]")  # Time in sec / Időtartam másodpercben
+    plt.ylabel("Távolság [m]")  # Distance in meter / Távolság méterben
+    plt.legend()
+    plt.title("Napvitorlás távolsága a Földtől időben") # Distance between the ViSoS and the Earth
+    plt.grid()
 
-# Időlépések száma az animációban
-frames = len(Y)  # Az animáció lépéseinek száma
-interval = 5000 / frames  # Időlépés hossza (5 másodperc alatt fut le)
+    # Napvitorlás és Föld 3D pályája időben
+    fig = plt.figure()
+    ax = fig.add_subplot(111, projection='3d')
+    ax.plot3D(Y[1:, 1], Y[1:, 2], Y[1:, 0], label='Napvitorlás')  # Napvitorlás pályája (x, y, idő) [m, s]
+    ax.plot3D(Y[1:, 7], Y[1:, 8], Y[1:, 0], label='Föld')  # Föld pályája (x, y, idő) [m, s]
+    ax.set_xlabel('X pozíció [m]')  # X-koordináta méterben
+    ax.set_ylabel('Y pozíció [m]')  # Y-koordináta méterben
+    ax.set_zlabel('Idő [s]')  # Idő másodpercben
+    ax.legend()
+    ax.set_title("Napvitorlás és a Föld 3D pályája") #Orbits in 3D
+    #plt.show()
 
-def update(frame):
-    """
-    Frissíti az animáció adatait minden lépésben.
-    """
-    # Napvitorlás aktuális és eddigi pályája
-    line.set_data(Y[:frame+1, 1], Y[:frame+1, 2])  # Eddigi pálya (kék vonal)
-    point.set_data([Y[frame, 1]], [Y[frame, 2]])  # Aktuális pozíció (piros pont)
-    #return line, point
-    # Föld aktuális pozíciójának frissítése
-    earth_point.set_data([Y[frame, 7]], [Y[frame, 8]])  # Föld aktuális pozíciója (zöld pont)
-    return line, point, earth_point
+    #Szögváltozás időben: Ez az ábra a napvitorlás pálya menti szögét (Th) és az irányítási szöget (alpha) mutatja fokban. Segít megérteni, hogyan módosul a napvitorlás iránya a szimuláció során.
+    #2D pályák: A napvitorlás és a Föld pályáját vetíti ki a 2D síkra. Ez egy vizuális áttekintést ad arról, hogy a napvitorlás hogyan mozog a Földhöz képest.
+    #Távolság a Földtől időben: Ez az ábra a napvitorlás és a Föld közötti távolságot ábrázolja az idő függvényében. A versenyzők célja, hogy a távolságot minimalizálják a szimuláció végére.
+    #3D pályák időben: Ez az ábra három dimenzióban mutatja be a napvitorlás és a Föld pályáját, időtengellyel kiegészítve. Különösen hasznos a mozgás dinamikájának megértésére.
 
-# Animáció létrehozása
-ani = FuncAnimation(fig, update, frames=frames, interval=interval, blit=True)
 
-# Az animáció megjelenítése
-plt.show()
+    # 2D animáció a napvitorlás és a Föld pályájáról
 
+    fig, ax = plt.subplots()
+    ax.set_title("Napvitorlás és Föld pályája (2D animáció)")
+    ax.set_xlabel("X pozíció [m]")
+    ax.set_ylabel("Y pozíció [m]")
+    ax.axis('equal')
+    ax.grid()
+
+    # Teljes pályák kirajzolása háttérként
+    ax.plot(Y[:, 7], Y[:, 8], 'g--', label='Föld pályája')  # Föld teljes pályája (zöld szaggatott)
+    line, = ax.plot([], [], 'b-', label='Napvitorlás pályája')  # Napvitorlás pályája (kék vonal)
+    point, = ax.plot([], [], 'ro', label='Napvitorlás aktuális pozíciója')  # Napvitorlás aktuális pozíciója (piros pont)
+
+    earth_point, = ax.plot([], [], 'go', label='Föld aktuális pozíciója')  # Föld aktuális pozíciója (zöld pont)
+    ax.legend()
+
+    # Időlépések száma az animációban
+    frames = len(Y)  # Az animáció lépéseinek száma
+    interval = 5000 / frames  # Időlépés hossza (5 másodperc alatt fut le)
+
+    def update(frame):
+        """
+        Frissíti az animáció adatait minden lépésben.
+        """
+        # Napvitorlás aktuális és eddigi pályája
+        line.set_data(Y[:frame+1, 1], Y[:frame+1, 2])  # Eddigi pálya (kék vonal)
+        point.set_data([Y[frame, 1]], [Y[frame, 2]])  # Aktuális pozíció (piros pont)
+        #return line, point
+        # Föld aktuális pozíciójának frissítése
+        earth_point.set_data([Y[frame, 7]], [Y[frame, 8]])  # Föld aktuális pozíciója (zöld pont)
+        return line, point, earth_point
+
+    # Animáció létrehozása
+    ani = FuncAnimation(fig, update, frames=frames, interval=interval, blit=True)
+
+    # Az animáció megjelenítése
+    plt.show()
