@@ -4,6 +4,8 @@ from scipy.interpolate import interp1d
 import matplotlib.pyplot as plt
 from matplotlib.animation import FuncAnimation
 import xlwings as xw
+import requests
+import json
 
 # Ezt a függvényt kell a versenyzőknek megírniuk a célnak megfelelően
 def visos_control(Y, t):
@@ -200,6 +202,19 @@ for t in range(day0 * 24 * 3600 + tstep, (day0 + day) * 24 * 3600 + tstep, tstep
     # Állapotvektor frissítése és tárolása
     Y_bovul = np.concatenate([[t], r_, v_, [Th_], [alpha_], r_earth])
     Y = np.vstack([Y, Y_bovul])
+
+print("Send data to the server...")
+token = 'PLACE_YOUR_TOKEN'
+response = requests.post(
+    'https://mernokmisszio.hu/solarsail/pyi.php',
+    json={'data': json.dumps(Y.tolist())}, 
+    headers={'Authorization': 'Bearer ' + token,
+    'User-Agent': 'PostmanRuntime/7.43.0',
+    'Accept-Encoding': 'gzip, deflate',
+    'Accept': '*/*',
+    'Connection': 'keep-alive',})
+print("Server response: ")
+print(response.text)
 
 # Eredmények megjelenítése grafikonokon
 
